@@ -1,5 +1,5 @@
 
-7/25/2016, 1:25:10 PM
+7/30/2016, 7:29:04 PM
 
 Operating System
   Name                        = Mac OS X
@@ -21,7 +21,7 @@ Titanium SDK
   Target Platform             = iphone
 
 Command
-  /usr/local/bin/node /Users/s.aman/.appcelerator/install/5.3.1/package/node_modules/titanium/lib/titanium.js build run --platform ios --log-level trace --sdk 5.3.1.GA --project-dir /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya --target simulator --ios-version 9.0 --device-family universal --deploy-type development --sim-type iphone --sim-version 9.0 --device-id 7CE31579-E4C1-418D-B6D2-19243D0B0278 --debug-host localhost:55610 --skip-js-minify --no-colors --no-progress-bars --no-prompt --prompt-type socket-bundle --prompt-port 49214 --config-file /var/folders/d1/4z1cwxw57n39cz2sz1smy0c00000gp/T/build-1469442308604.json --no-banner --project-dir /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya
+  /usr/local/bin/node /Users/s.aman/.appcelerator/install/5.3.1/package/node_modules/titanium/lib/titanium.js build run --platform ios --log-level trace --sdk 5.3.1.GA --project-dir /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya --target simulator --ios-version 9.0 --device-family universal --deploy-type development --sim-type iphone --sim-version 9.0 --device-id 7CE31579-E4C1-418D-B6D2-19243D0B0278 --skip-js-minify --no-colors --no-progress-bars --no-prompt --prompt-type socket-bundle --prompt-port 49294 --username salemkhan2001@gmail.com --password zaria81 --config-file /var/folders/d1/4z1cwxw57n39cz2sz1smy0c00000gp/T/build-1469896142534.json --no-banner --project-dir /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya
 
 [TRACE]  [ioslib] Validating iOS Simulator UDID 7CE31579-E4C1-418D-B6D2-19243D0B0278
 [TRACE]  [ioslib] Found iOS Simulator UDID 7CE31579-E4C1-418D-B6D2-19243D0B0278
@@ -71,13 +71,13 @@ Command
 [DEBUG]  Xcode installation: /Applications/Xcode.app/Contents/Developer
 [DEBUG]  iOS WWDR certificate: not found
 [INFO]   Minimum iOS version: 7.1
-[INFO]   Debugging enabled via debug host: localhost:55610
+[INFO]   Debugging disabled
 [INFO]   Profiler disabled
 [INFO]   Set to copy files instead of symlinking
 [INFO]   Initializing the build directory
-[TRACE]  offline build file /var/folders/d1/4z1cwxw57n39cz2sz1smy0c00000gp/T/build-2dcc8141dcbf7dfef3a09b521e2d203f07e44959.json
+[TRACE]  offline build file /var/folders/d1/4z1cwxw57n39cz2sz1smy0c00000gp/T/build-c86696dfc882339e911995b55f9e417f1fbf787d.json
 [TRACE]  online 1
-[TRACE]  optimizing build, last build was 2697.907 sec ago
+[TRACE]  optimizing build, last build was 23519.81 sec ago
 [INFO]   Creating Xcode project
 [TRACE]  Removing pre-compile phase
 [TRACE]  Adding 1 native module library
@@ -106,7 +106,7 @@ Command
 [INFO]   Installing default LaunchScreen.storyboard
 [TRACE]  No change, skipping /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya/build/iphone/LaunchScreen.storyboard
 [INFO]   Creating debugger and profiler plists
-[DEBUG]  Writing /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya/build/iphone/build/Products/Debug-iphonesimulator/mazaya.app/debugger.plist
+[DEBUG]  Skipping /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya/build/iphone/build/Products/Debug-iphonesimulator/mazaya.app/debugger.plist
 [DEBUG]  Skipping /Users/s.aman/Documents/Appcelerator_Studio_Workspace/mazaya/build/iphone/build/Products/Debug-iphonesimulator/mazaya.app/profiler.plist
 [INFO]   Analyzing Resources directory
 [INFO]   Analyzing platform files
@@ -251,13 +251,13 @@ Command
 [INFO]   Removing files
 [DEBUG]  Removing empty directories
 [INFO]   Skipping xcodebuild
-[INFO]   Finished building the application in 1s 890ms
+[INFO]   Finished building the application in 1s 840ms
 [INFO]   Launching iOS Simulator
 [TRACE]  [ioslib] Selected iOS Simulator: iPhone 5
 [TRACE]  [ioslib]   UDID    = 7CE31579-E4C1-418D-B6D2-19243D0B0278
 [TRACE]  [ioslib]   iOS     = 9.0
 [TRACE]  [ioslib] Autoselected Xcode: 7.0.1
-[TRACE]  [ioslib] Removing old log file: /Users/s.aman/Library/Developer/CoreSimulator/Devices/7CE31579-E4C1-418D-B6D2-19243D0B0278/data/Containers/Data/Application/D53B5F16-2F2F-40D0-A123-56154D1223A9/Documents/f7271b50-8911-4408-9555-914f299c11d2.log
+[TRACE]  [ioslib] Removing old log file: /Users/s.aman/Library/Developer/CoreSimulator/Devices/7CE31579-E4C1-418D-B6D2-19243D0B0278/data/Containers/Data/Application/1B3F2216-A083-40AC-91C4-964C6ECE9D04/Documents/f7271b50-8911-4408-9555-914f299c11d2.log
 [TRACE]  [ioslib] iPhone 5 Simulator already running with the correct udid
 [TRACE]  [ioslib] Tailing iPhone 5 Simulator system log: /Users/s.aman/Library/Logs/CoreSimulator/7CE31579-E4C1-418D-B6D2-19243D0B0278/system.log
 [TRACE]  [ioslib] Running: osascript "/Users/s.aman/Library/Application Support/Titanium/mobilesdk/osx/5.3.1.GA/node_modules/ioslib/lib/sim_focus.scpt" "Simulator"
@@ -266,5 +266,5 @@ Command
 [TRACE]  [ioslib] App installed
 [TRACE]  [ioslib] Running: /Applications/Xcode.app/Contents/Developer/usr/bin/simctl launch 7CE31579-E4C1-418D-B6D2-19243D0B0278 com.mazaya
 [TRACE]  [ioslib] App launched
+[TRACE]  [ioslib] Found application log file: /Users/s.aman/Library/Developer/CoreSimulator/Devices/7CE31579-E4C1-418D-B6D2-19243D0B0278/data/Containers/Data/Application/D62F733D-210B-4F65-8FE4-669D57F0AF63/Documents/f7271b50-8911-4408-9555-914f299c11d2.log
 [TRACE]  [mazaya] assertion failed: 15F34 13A340: libxpc.dylib + 71578 [5150F854-0B13-3C60-8B86-891EC976986E]: 0x7d
-[TRACE]  [ioslib] Found application log file: /Users/s.aman/Library/Developer/CoreSimulator/Devices/7CE31579-E4C1-418D-B6D2-19243D0B0278/data/Containers/Data/Application/DD6E08AF-AA88-4343-93D3-AF1172D0AB7C/Documents/f7271b50-8911-4408-9555-914f299c11d2.log

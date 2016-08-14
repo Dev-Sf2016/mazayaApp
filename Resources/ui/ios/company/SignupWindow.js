@@ -39,13 +39,13 @@ function SignupWindow(){
 	
 	
             
-    var nameParam = Functions.merge(inputParam, {hintText: I18N.text('Company Name', 'Company Name')});
-    var urlParam = Functions.merge(inputParam, {hintText: I18N.text('Website URL', 'Website URL')});
-    var logoParam = {top:10,width:'90%',height:Ti.UI.SIZE, title:I18N.text('Browse', 'Browse')};;
+    var nameParam = Functions.merge(inputParam, {hintText: I18N.text('Company Name', 'Company Name'), value: 'test123'});
+    var urlParam = Functions.merge(inputParam, {hintText: I18N.text('Website URL', 'Website URL'), value: 'http://test123.com'});
+    var logoParam = {top:10,width:'90%',height:Ti.UI.SIZE, title:I18N.text('Browse', 'Browse')};
     
-	var delegateNameParam = Functions.merge(inputParam, {hintText: I18N.text('Delegate Name', 'Delegate Name')});
-	var emailParam = Functions.merge(inputParam, {hintText: I18N.text('somoneatsomonedocom', 'someone@domain.com')});
-	var passwordParam = Functions.merge(inputParam, {hintText: I18N.text('Password', 'Password'), passwordMask:true});
+	var delegateNameParam = Functions.merge(inputParam, {hintText: I18N.text('Delegate Name', 'Delegate Name'), value: 'test1233'});
+	var emailParam = Functions.merge(inputParam, {hintText: I18N.text('somoneatsomonedocom', 'someone@domain.com'), value: 'test123@test.com'});
+	var passwordParam = Functions.merge(inputParam, {hintText: I18N.text('Password', 'Password'), passwordMask:true, value: '12345678'});
 
 	var requiredMessage = I18N.text("This field is required", "This field is required");
 	var invalidEmailMessage = I18N.text('Email is not valid', 'Email is not valid');
@@ -161,6 +161,20 @@ function SignupWindow(){
 			};
 			
 			param.postData = JSON.stringify(postData);
+			
+			//TODO: Remove this code in production
+			var app_dir = Titanium.Filesystem.applicationDataDirectory;
+			var file_name = 'upload.txt';
+			
+			Config.trace(app_dir + file_name);
+			
+			var fx = Titanium.Filesystem.getFile(app_dir, file_name);
+			
+			if(fx){
+				fx.write(param.postData);
+				fx.close();
+			}
+			return;
 			//param.callBack = loginServiceResponse;
 			param.context = self;
 			param.loaderMessage = I18N.text('Signing', 'Signing');
