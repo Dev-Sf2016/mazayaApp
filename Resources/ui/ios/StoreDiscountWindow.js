@@ -1,6 +1,6 @@
 
 
-function DiscountWindow(cid){
+function StoreDiscountWindow(cid){
 	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Discount List', 'Discount List')));
 		
 		
@@ -9,7 +9,8 @@ function DiscountWindow(cid){
 			width:Ti.UI.FILL,
 			height:Ti.UI.FILL,
 			layout: 'vertical',
-			top: 60
+			top: 60,
+			//backgroundColor:"#fff000"
 		});
 	
 		self.add(rootView);
@@ -116,9 +117,9 @@ function DiscountWindow(cid){
 		
 		//TODO: make the parameter dynamic
 		
-		options.url = '/api/companies/' + cid + '/discount.json';
+		options.url = '/api/home/' + cid + '/company/discount.json';
 		options.locale = I18N.locale;
-		options.wsse = Functions.getXWSEE();
+		options.wsse = Functions.getAnonymousXWSEE();
 		options.postData = {};
 		options.type = 'GET';
 		options.loaderMessage = I18N.text('Loadding Discount', 'Loading Discounts');
@@ -133,6 +134,25 @@ function DiscountWindow(cid){
 					grid.add(createGridItem(data.discounts[i], data.base_url));
 				}
 				
+				
+			}
+			else if(e.status == HTTP_CODES.HTTP_NOT_FOUND){
+				var obj = JSON.parse(e.responseText);
+				var label = UX.Label({
+					width: '90%',
+					height: Ti.UI.SIZE,
+					//top: 100,
+					//backgroundColor:"red",
+					text: obj.message,
+					font:{
+						fontSize: '18sp'
+					},
+					color:'red',
+					textAlign:Ti.UI.TEXT_ALIGNMENT_CENTER
+				});
+				
+				self.remove(rootView);
+				self.add(label);
 				
 			}
 		};
@@ -152,4 +172,4 @@ function DiscountWindow(cid){
 
 }
 
-module.exports = DiscountWindow;
+module.exports = StoreDiscountWindow;

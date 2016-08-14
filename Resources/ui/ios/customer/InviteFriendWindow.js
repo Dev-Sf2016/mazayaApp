@@ -26,6 +26,9 @@ function InviteFriendWindow(){
 		//borderRadius:10,
 		top:10,
 		hintTextColor: '#ddd',
+		keyboardType: Ti.UI.KEYBOARD_TYPE_DEFAULT,
+		//enableReturnKey:true,
+		returnKeyType:Ti.UI.RETURNKEY_NEXT,
 		textAlign: (I18N.direction == 'ltr')?Ti.UI.TEXT_ALIGNMENT_LEFT:Ti.UI.TEXT_ALIGNMENT_RIGHT,
 		font:{
 			fontSize:'12sp'
@@ -76,7 +79,7 @@ function InviteFriendWindow(){
 			var user = Functions.getUserInfo();
 			
 			//TODO: make the customer id dynamic
-			var param = new SM.ServiceParam('/api/customer/1/invitefriend.json', I18N.locale, Functions.getXWSEE(), 'POST'  );
+			var param = new SM.ServiceParam('/api/customer/invitefriend.json', I18N.locale, Functions.getXWSEE(AppConstants.CUSTOMER), 'POST'  );
 			var postData = {
 			  "email": email.getValue()
 			};

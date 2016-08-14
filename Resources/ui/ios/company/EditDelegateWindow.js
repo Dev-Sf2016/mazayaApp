@@ -1,7 +1,8 @@
-function AddDelegateWindow(){
+function EditDelegateWindow(delegate){
 	
-	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Add Delegate', 'Add Delegate')));
-
+	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Edit Delegate', 'Edit Delegate')));
+	
+	//self.leftNavButton = leftNavigationButton;
 
 	var rootView = UX.View({
 		width:Ti.UI.FILL,
@@ -40,14 +41,14 @@ function AddDelegateWindow(){
 	// });
 	
 	
-	var nameParam = Functions.merge(inputParam, {hintText: I18N.text('Delegate Name', 'Delegate Name')});
-	var emailParam = Functions.merge(inputParam, {hintText: I18N.text('somoneatsomonedocom', 'simeone@domain.com')});
+	var nameParam = Functions.merge(inputParam, {hintText: I18N.text('Delegate Name', 'Delegate Name'), value:delegate.name});
+	var emailParam = Functions.merge(inputParam, {hintText: I18N.text('somoneatsomonedocom', 'simeone@domain.com'), value:delegate.email});
 	var passwordParam = Functions.merge(inputParam, {hintText: I18N.text('Password', 'Password'), passwordMask:true});
 
 	var requiredMessage = I18N.text("This field is required", "This field is required");
 	var invalidEmailMessage = I18N.text('Email is not valid', 'Email is not valid');
-	var passwordLengthMessage = I18N.text('Password must be between 8 and 40 Characters', 'Password must be between 8 and 40 Characters');
-	var confirmMessage = I18N.text('Password and confirm password must be equal', 'Password and confirm password must be equal');
+	//var passwordLengthMessage = I18N.text('Password must be between 8 and 40 Characters', 'Password must be between 8 and 40 Characters');
+	//ar confirmMessage = I18N.text('Password and confirm password must be equal', 'Password and confirm password must be equal');
 	
 	var errorParam = {
 		width:"90%",
@@ -65,24 +66,24 @@ function AddDelegateWindow(){
 	var name_error = UX.Label(Functions.merge(errorParam, {}));
 	var email = UX.TextField(emailParam);
 	var email_error = UX.Label(Functions.merge(errorParam, {}));
-	var password = UX.TextField(passwordParam);
-	var password_error = UX.Label(Functions.merge(errorParam, {}));
-	var confirmPassword = UX.TextField(Functions.merge(passwordParam, {hintText: I18N.text("Confirm Password", "Confirm Password")}));
-	var confirmPassword_error = UX.Label(Functions.merge(errorParam, {}));
+	//var password = UX.TextField(passwordParam);
+	//var password_error = UX.Label(Functions.merge(errorParam, {}));
+	//var confirmPassword = UX.TextField(Functions.merge(passwordParam, {hintText: I18N.text("Confirm Password", "Confirm Password")}));
+	//var confirmPassword_error = UX.Label(Functions.merge(errorParam, {}));
 	
 	var C = FM.Constraint;
 	
 	var $_FIELDS = [];
 	$_FIELDS.push({name:name, error:name_error, constraints: [new C.Required(requiredMessage)]});
 	$_FIELDS.push({name:email, error:email_error, constraints: [new C.Required(requiredMessage), new C.Email(invalidEmailMessage)]});
-	$_FIELDS.push({name:password, error:password_error, constraints: [new C.Required(requiredMessage), new C.Min(passwordLengthMessage, 8), 
-			new C.Max(passwordLengthMessage, 40),  new C.EqualTo(confirmMessage, function(){
-		return confirmPassword.getValue();
-	})]});
-	$_FIELDS.push({name:confirmPassword, error:confirmPassword_error, constraints: [new C.Required(requiredMessage	)]});
+	// $_FIELDS.push({name:password, error:password_error, constraints: [new C.Required(requiredMessage), new C.Min(passwordLengthMessage, 8), 
+			// new C.Max(passwordLengthMessage, 40),  new C.EqualTo(confirmMessage, function(){
+		// return confirmPassword.getValue();
+	// })]});
+	// $_FIELDS.push({name:confirmPassword, error:confirmPassword_error, constraints: [new C.Required(requiredMessage	)]});
 	
 	var submit = UX.Button({
-		title:I18N.text('Add', 'Add'),
+		title:I18N.text('Edit', 'Edit'),
 		width:'60%',
 		height:35,
 		backgroundColor:'#6895B2',
@@ -104,10 +105,10 @@ function AddDelegateWindow(){
 	wraperView.add(name_error);
 	wraperView.add(email);
 	wraperView.add(email_error);
-	wraperView.add(password);
-	wraperView.add(password_error);
-	wraperView.add(confirmPassword);
-	wraperView.add(confirmPassword_error);
+	// wraperView.add(password);
+	// wraperView.add(password_error);
+	// wraperView.add(confirmPassword);
+	// wraperView.add(confirmPassword_error);
 	wraperView.add(submit);
 	
 	rootView.add(wraperView);
@@ -116,35 +117,35 @@ function AddDelegateWindow(){
 	function handleForm(){
 		
 		if(Functions.isValid($_FIELDS)){
-			
-			
+				
 			var user = Functions.getUserInfo();
-			
-			//TODO: make the company id dynamic
-			//TODO: Handle unique constraints
+		
 			var m = user.modal;
-			var param = new SM.ServiceParam('/api/company/' + user.modal.user.company.id + '/delegate.json', I18N.locale, Functions.getXWSEE(AppConstants.COMPANY), 'POST'  );
+			var param = new SM.ServiceParam('/api/company/' + user.modal.user.company.id + '/delegate.json', I18N.locale, Functions.getXWSEE(AppConstants.COMPANY), 'PATCH'  );
 			var postData = {
 			  "name": name.getValue(),
 			  "email": email.getValue(),
-			  "password": {
-			    "first": password.getValue(),
-			    "second": password.getValue()
-			  }
+			  "id": delegate.id
+			  // "password": {
+			    // "first": password.getValue(),
+			    // "second": password.getValue()
+			  // }
 			};
 			
 			param.postData = JSON.stringify(postData);
 			//param.callBack = loginServiceResponse;
 			param.context = self;
-			param.loaderMessage = I18N.text('Adding Delegate', 'Adding Delgate');
+			param.loaderMessage = I18N.text('Updating Delegate', 'Updating Delegate');
 			
 			param.callBack = function(e){
 				if(e.status == HTTP_CODES.HTTP_OK){
-					alert(I18N.text("Delegate is added successfully", "Delegate is added successfully"));
+					var obj = JSON.parse(e.responseText);
+					alert(obj.message);
 					name.setValue('');
 					email.setValue('');
-					password.setValue('');
-					confirmPassword.setValue('');
+					self.fireEvent('updateCompleted', {});
+					//password.setValue('');
+					//confirmPassword.setValue('');
 					
 				}
 				else if(e.status == HTTP_CODES.HTTP_BADE_REQUEST){
@@ -169,21 +170,21 @@ function AddDelegateWindow(){
 							});
 						}
 						
-						if(fields.password.children.first.hasOwnProperty('errors')){
-							password_error.applyProperties({
-								text: fields.password.children.first.errors[0],
-								height: Ti.UI.SIZE,
-								visible: true
-							});
-						}
-						
-						if(fields.password.children.second.hasOwnProperty('errors')){
-							confirmPassword_error.applyProperties({
-								text: fields.password.children.second.errors[0],
-								height: Ti.UI.SIZE,
-								visible: true
-							});
-						}
+						// if(fields.password.children.first.hasOwnProperty('errors')){
+							// password_error.applyProperties({
+								// text: fields.password.children.first.errors[0],
+								// height: Ti.UI.SIZE,
+								// visible: true
+							// });
+						// }
+// 						
+						// if(fields.password.children.second.hasOwnProperty('errors')){
+							// confirmPassword_error.applyProperties({
+								// text: fields.password.children.second.errors[0],
+								// height: Ti.UI.SIZE,
+								// visible: true
+							// });
+						// }
 							
 					}
 					
@@ -200,4 +201,4 @@ function AddDelegateWindow(){
 	
 };
 
-module.exports = AddDelegateWindow;
+module.exports = EditDelegateWindow;

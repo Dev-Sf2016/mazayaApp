@@ -1,9 +1,7 @@
-
+//TODO: Add pagination in this window
 
 function HomeWindow(){
-	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Discount List', 'Discount List')));
-	
-	
+	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Stores', 'Stores')));
 	
 	var rootView = UX.View({
 		width:Ti.UI.FILL,
@@ -14,10 +12,44 @@ function HomeWindow(){
 
 	self.add(rootView);
 	
-	//var title = Functions.IOSWindowTitle({}, {text:I18N.text('Discount List', 'Discount List')}, true, self);
-
-	//rootView.add(title);
+	self.reload = function(){
+		rootView.removeAllChildren();
+		
+		var options = new SM.ServiceParam();
 	
+		//get all stores
+		
+		options.url = '/api/home/companies.json';
+		options.locale = I18N.locale;
+		options.wsse = Functions.getAnonymousXWSEE();
+		options.postData = {};
+		options.type = 'GET';
+		options.loaderMessage = I18N.text('Loadding Discount', 'Loading Discounts');
+		options.callBack = function(e){
+			
+			if(e.status == HTTP_CODES.HTTP_OK){
+				
+				var data = JSON.parse(e.responseText);
+				var gridData = [];
+				
+				for (var i=0; i < data.companies.length; i++) {
+					grid.add(createGridItem(data.companies[i], data.base_url));
+				}
+				
+				
+			}
+		};
+		
+		
+		options.context = self;
+		
+		
+		
+		
+		SM.ServiceManager(options);
+		
+		rootView.add(grid);
+	};
 	var grid = UX.ScrollView({
 		width:Ti.UI.FILL,
 		height:Ti.UI.FILL,
@@ -104,14 +136,10 @@ function HomeWindow(){
 	};
 	
 	function viewClickHandler(e){
-		var Window = require(Config.uidir + 'DiscountWindow');
+		var Window = require(Config.uidir + 'StoreDiscountWindow');
 		var win = new Window(e.source.cid);
 		
-		 var leftButton = UX.Label({
-			color:'#ffffff',
-			text:'Close',
-			
-		});
+		 var leftButton = Functions.CloseNaveButton();
 		
 		win.setLeftNavButton(leftButton);
 		var nav = Ti.UI.iOS.createNavigationWindow({
@@ -124,41 +152,8 @@ function HomeWindow(){
 		nav.open();
 	}
 	
-	var options = new SM.ServiceParam();
 	
-	//TODO: make the parameter dynamic
-	
-	options.url = '/api/home/companies.json';
-	options.locale = I18N.locale;
-	options.wsse = Functions.getXWSEE();
-	options.postData = {};
-	options.type = 'GET';
-	options.loaderMessage = I18N.text('Loadding Discount', 'Loading Discounts');
-	options.callBack = function(e){
-		
-		if(e.status == HTTP_CODES.HTTP_OK){
-			
-			var data = JSON.parse(e.responseText);
-			var gridData = [];
-			
-			for (var i=0; i < data.companies.length; i++) {
-				grid.add(createGridItem(data.companies[i], data.base_url));
-			}
-			
-			
-		}
-	};
-	
-	
-	options.context = self;
-	
-	
-	
-	
-	SM.ServiceManager(options);
-	
-	rootView.add(grid);
-	
+	self.reload();
 	
 	return self;
 

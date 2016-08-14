@@ -1,5 +1,5 @@
-function AddDiscountWindow(){
-	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Upload Discount', 'Upload Discount')));
+function UploadfDiscountWindow(discount, base_url){
+	var self = UX.Window(Functions.IOSWindowTitle(I18N.text('Update Discount', 'Update Discount')));
 	
 	var rootView = UX.View({
 		width:Ti.UI.FILL,
@@ -35,10 +35,10 @@ function AddDiscountWindow(){
 	var maxDate = new Date();
 	maxDate.setYear(maxDate.getYear()+50);
 	
-	var titleParam = Functions.merge(inputParam, {hintText: I18N.text('Enter title', 'Enter title')});
-	var startDateParam = Functions.merge(inputParam, {hintText: I18N.text('Start Date', 'Start Date'), maxDate: maxDate});
-	var endDateParam = Functions.merge(inputParam, {hintText: I18N.text('End Date', 'End Date'), maxDate: maxDate});
-	var promotionParam = {top:10,width:'90%',height:Ti.UI.SIZE, title:I18N.text('Browse', 'Browse')};
+	var titleParam = Functions.merge(inputParam, {hintText: I18N.text('Enter title', 'Enter title'), value: discount.title});
+	var startDateParam = Functions.merge(inputParam, {hintText: I18N.text('Start Date', 'Start Date'), maxDate: maxDate,value: discount.start_date, date:Functions.getDateForPicker(discount.start_date)});
+	var endDateParam = Functions.merge(inputParam, {hintText: I18N.text('End Date', 'End Date'), maxDate: maxDate, value: discount.end_date, date: Functions.getDateForPicker(discount.end_date)});
+	var promotionParam = {top:10,width:'90%',height:Ti.UI.SIZE, title:I18N.text('Browse', 'Browse'), imageUrl: base_url + "/" + discount.company.id + "/" + discount.promotion};
 	var requiredMessage = I18N.text("This field is required", "This field is required");
 	
 	var errorParam = {
@@ -105,14 +105,17 @@ function AddDiscountWindow(){
 			//TODO: Save and upload the data
 		
 			var user = Functions.getUserInfo();
-			var param = new SM.ServiceParam('/api/company/' + user.modal.user.company.id +'/discount.json', I18N.locale, Functions.getXWSEE(AppConstants.COMPANY), 'POST'  );
+			var param = new SM.ServiceParam('/api/company/' + user.modal.user.company.id +'/discount.json', I18N.locale, Functions.getXWSEE(AppConstants.COMPANY), 'PATCH'  );
 			var postData = {
 				title: discountTitle.getValue(),
 				startDate: startDate.getValue(),
 				endDate: endDate.getValue(),
-				promotion: Ti.Utils.base64encode(promotion.getValue()).toString(),
-				mimeType: promotion.getValue().mimeType
+				id:discount.id
 			};
+			if(promotion.getValue() !== ''){
+				postData.promotion =  Ti.Utils.base64encode(promotion.getValue()).toString();
+				postData.mimeType = promotion.getValue().mimeType;
+			}
 			param.postData = JSON.stringify(postData);
 			param.callBack = addingDiscount;
 			param.context = self;
@@ -180,4 +183,4 @@ function AddDiscountWindow(){
 	
 };
 
-module.exports = AddDiscountWindow;
+module.exports = UploadfDiscountWindow;

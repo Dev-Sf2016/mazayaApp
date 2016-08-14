@@ -66,7 +66,7 @@ function TransactionWindow(){
 	
 	rootView.add(headerView);
 	
-	var param = new SM.ServiceParam('/api/customer/1/transactions.json', I18N.locale, Functions.getXWSEE(), 'GET'  );
+	var param = new SM.ServiceParam('/api/customer/transactions.json', I18N.locale, Functions.getXWSEE(AppConstants.CUSTOMER), 'GET'  );
 	
 	param.postData = {};
 	param.callBack = transactionServiceResponse;
@@ -135,8 +135,23 @@ function TransactionWindow(){
 			};
 			rootView.add(scrollView);
 		}
+		else if(e.status == HTTP_CODES.HTTP_NOT_FOUND){
+			var obj = JSON.parse(e.responseText);
+			self.remove(rootView);
+			self.add(UX.Label({
+				width:'90%',
+				height:Ti.UI.SIZE,
+				textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+				text: obj.message,
+				color:'red',
+				font:{
+					fontSize: '14sp'
+				}
+			}));
+		}
 		else if(e.status == HTTP_CODES.HTTP_UN_AUTHORIZED){
-			//TODO: do another attempt to login other wise logout the user and show him to the login screen
+			
+			Functions.logout();
 
 		}
 

@@ -38,6 +38,16 @@ function ServiceManager(serviceParam){
 		onerror: function(e){
 			activitiIndicator.hide();
 			Ti.API.info("Received JSON Text: " + this.responseText);
+			if(serviceParam.url == '/api/customer/login.json' || serviceParam.url == '/api/company/login.json'){
+				
+			}
+			else{
+				if(client.status == HTTP_CODES.HTTP_UN_AUTHORIZED || client.status == HTTP_CODES.HTTP_NON_AUTHORITATIVE || client.status == HTTP_CODES.HTTP_INTERNAL_SERVER_ERROR){
+					//alert(I18N.text('Username or Passowrod is not valid', 'Username or Passowrod is not valid'));
+					
+					Ti.fireEvent('credentialExpired', {});
+				}
+			}
 			serviceParam.context.remove(activitiIndicator);
 			var result = {
 				status: client.status, statusText:client.statusText, responseText: this.responseText
@@ -47,23 +57,23 @@ function ServiceManager(serviceParam){
 		}
 	});
 	
-
-	//client.open("POST", "https://150.150.101.83/ConnectService/Service.asmx/"+soapMethod);
-	client.open(serviceParam.type, "http://mozyda.dev/app_dev.php/"+ serviceParam.locale + serviceParam.url );
-
-	
+	//var serviceURL = "http://dev.mzaaya.com/app_dev.php/"+ serviceParam.locale + serviceParam.url;
+	var serviceURL = "http://mozyda.dev/app_dev.php/"+ serviceParam.locale + serviceParam.url;
+	client.open(serviceParam.type, serviceURL );
 	
 	client.setRequestHeader("Accept", "*/*");
 	client.setRequestHeader("Content-Type", "application/json");
-	//client.setRequestHeader('enctype', 'multipart/form-data');
 	
-	Config.trace("WSSE:" + serviceParam.wsse);
+	
 	if(serviceParam.wsse != undefined && serviceParam.wsse != ''){
 		client.setRequestHeader("x-wsse", serviceParam.wsse);
 	}
-	client.setEnableKeepAlive(false);
 	
-	Config.trace(serviceParam.postData);
+
+	Config.trace("x-wsse:" + serviceParam.wsse);
+	
+	Config.trace("postData:" + serviceParam.postData);
+	Config.trace("ServiceURL:" + serviceURL);
 	
 	client.send(serviceParam.postData);
 };

@@ -10,6 +10,7 @@ exports.HTTP_UN_AUTHORIZED      = 401;
 exports.HTTP_FORBIDDEN          = 403;
 exports.HTTP_NOT_FOUND          = 404;
 exports.HTTP_METHOD_NOT_ALLOWED = 405;
+exports.HTTP_INTERNAL_SERVER_ERROR = 500;
 
 
 

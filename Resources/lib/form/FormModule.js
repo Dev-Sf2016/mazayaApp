@@ -65,7 +65,7 @@ function Email(message){
 Email.prototype = Object.create(Constraint.prototype);
 
 Email.prototype.validate = function(value){
-	
+	if(value == '') return true;
 	return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test( value );
 	
 };
@@ -276,7 +276,10 @@ function FieldType(params, constraints){
 		visible:false,
 		color: 'red',
 		width:params.width,
-		height: 0
+		height: 0,
+		font:{
+			fontSize: '10sp'
+		}
 	});
 	/**
 	 * @method

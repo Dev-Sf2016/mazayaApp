@@ -64,12 +64,12 @@ function DetailWindow(){
 	});
 	
 	
-	table.add(getRow(I18N.text('Name', 'Name'), user.modal.name, '#dddddd'));
-	table.add(getRow(I18N.text('Email', 'Email'), user.modal.email, '#fffffff'));
-	table.add(getRow(I18N.text('Nationality', 'Nationality'), user.modal.nationality, '#dddddd'));
+	table.add(getRow(I18N.text('Name', 'Name'), user.modal.user.name, '#dddddd'));
+	table.add(getRow(I18N.text('Email', 'Email'), user.modal.user.email, '#fffffff'));
+	table.add(getRow(I18N.text('Nationality', 'Nationality'), user.modal.user.nationality, '#dddddd'));
 	table.add(getRow(I18N.text('City', 'City'), user.modal.city, '#fffffff'));
-	table.add(getRow(I18N.text('Card Number', 'Card Number'), user.modal.loyality_id, 'dddddd'));
-	table.add(getRow(I18N.text('Card Status', 'Card Status'), (user.modal.is_active == 1)? I18N.text('Active', 'Active'):I18N.text('Inactive', 'Inactive'), '#fffffff'));
+	table.add(getRow(I18N.text('Card Number', 'Card Number'), user.modal.user.loyality_id, 'dddddd'));
+	table.add(getRow(I18N.text('Card Status', 'Card Status'), (user.modal.user.is_active == 1)? I18N.text('Active', 'Active'):I18N.text('Inactive', 'Inactive'), '#fffffff'));
 	
 	
 	

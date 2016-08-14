@@ -4,10 +4,12 @@ function SignupWindow(){
 
 	
 
-	var rootView = UX.View({
+	var rootView = UX.ScrollView({
 		width:Ti.UI.FILL,
 		height:Ti.UI.FILL,
 		layout: 'vertical',
+		scrollType:"vertical",
+		
 	});
 
 	self.add(rootView);
@@ -26,6 +28,9 @@ function SignupWindow(){
 		top:10,
 		hintTextColor: '#ddd',
 		hintText: "",
+		keyboardType: Ti.UI.KEYBOARD_TYPE_DEFAULT,
+		//enableReturnKey:true,
+		returnKeyType:Ti.UI.RETURNKEY_NEXT,
 		font:{
 			fontSize:'12sp'
 		},
@@ -33,19 +38,20 @@ function SignupWindow(){
 	};
 	
 	// Ti.UI.createTextField({
-		// passwordMask:true
+		// passwordMask:true,
+		// :Ti.UI.
 // 		
 	// });
 	
 	
             
-    var nameParam = Functions.merge(inputParam, {hintText: I18N.text('Company Name', 'Company Name'), value: 'test123'});
-    var urlParam = Functions.merge(inputParam, {hintText: I18N.text('Website URL', 'Website URL'), value: 'http://test123.com'});
+    var nameParam = Functions.merge(inputParam, {hintText: I18N.text('Company Name', 'Company Name')});
+    var urlParam = Functions.merge(inputParam, {hintText: I18N.text('Website URL', 'Website URL')});
     var logoParam = {top:10,width:'90%',height:Ti.UI.SIZE, title:I18N.text('Browse', 'Browse')};
     
-	var delegateNameParam = Functions.merge(inputParam, {hintText: I18N.text('Delegate Name', 'Delegate Name'), value: 'test1233'});
-	var emailParam = Functions.merge(inputParam, {hintText: I18N.text('somoneatsomonedocom', 'someone@domain.com'), value: 'test123@test.com'});
-	var passwordParam = Functions.merge(inputParam, {hintText: I18N.text('Password', 'Password'), passwordMask:true, value: '12345678'});
+	var delegateNameParam = Functions.merge(inputParam, {hintText: I18N.text('Name', 'Name')});
+	var emailParam = Functions.merge(inputParam, {hintText: I18N.text('somoneatsomonedocom', 'someone@domain.com')});
+	var passwordParam = Functions.merge(inputParam, {hintText: I18N.text('Password', 'Password'), passwordMask:true});
 
 	var requiredMessage = I18N.text("This field is required", "This field is required");
 	var invalidEmailMessage = I18N.text('Email is not valid', 'Email is not valid');
@@ -87,7 +93,7 @@ function SignupWindow(){
 	$_FIELDS.push({name:url, error:url_error, constraints: [new C.Required(requiredMessage), new C.URL(invalidUrlMessage)]});
 	$_FIELDS.push({name:logo, error:logo_error, constraints: [new C.Required(requiredMessage)]});
 	
-	$_FIELDS.push({name:delegateName, error:delegateName_error, constraints: [new C.Required(requiredMessage)]});
+	$_FIELDS.push({name:delegateName, error:delegateName_error, constraints: []});
 	$_FIELDS.push({name:email, error:email_error, constraints: [new C.Required(requiredMessage), new C.Email(invalidEmailMessage)]});
 	$_FIELDS.push({name:password, error:password_error, constraints: [new C.Required(requiredMessage), new C.Min(passwordLengthMessage, 8), 
 			new C.Max(passwordLengthMessage, 40),  new C.EqualTo(confirmMessage, function(){
@@ -137,16 +143,10 @@ function SignupWindow(){
 	function handleForm(){
 		
 		if(Functions.isValid($_FIELDS)){
-			
-			
-			
-			var user = Functions.getUserInfo();
-			
-			//TODO: make the company id dynamic
-			//TODO: Handle unique constraints
 			var param = new SM.ServiceParam('/api/home/registercompany.json', I18N.locale, '', 'POST'  );
 			var postData = {
 				"name": name.getValue(),
+				"mimeType": logo.getValue().mimeType,
 				"logo": Ti.Utils.base64encode(logo.getValue()).toString(),
 				"url": url.getValue(),
 				"companyDelegate": [{
@@ -162,20 +162,7 @@ function SignupWindow(){
 			
 			param.postData = JSON.stringify(postData);
 			
-			//TODO: Remove this code in production
-			var app_dir = Titanium.Filesystem.applicationDataDirectory;
-			var file_name = 'upload.txt';
-			
-			Config.trace(app_dir + file_name);
-			
-			var fx = Titanium.Filesystem.getFile(app_dir, file_name);
-			
-			if(fx){
-				fx.write(param.postData);
-				fx.close();
-			}
-			return;
-			//param.callBack = loginServiceResponse;
+			param.wsse = Functions.getAnonymousXWSEE();
 			param.context = self;
 			param.loaderMessage = I18N.text('Signing', 'Signing');
 			
@@ -197,14 +184,76 @@ function SignupWindow(){
 					
 					if(data.hasOwnProperty('children')){
 						var fields = data.children;
+						if(fields.name.hasOwnProperty('errors')){
+							name_error.applyProperties({
+								text: fields.name.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}
+						
+						if(fields.url.hasOwnProperty('errors')){
+							url_error.applyProperties({
+								text: fields.url.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}	
+						
+						if(fields.logo.hasOwnProperty('errors')){
+							logo_error.applyProperties({
+								text: fields.logo.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}
 						
 						if(fields.name.hasOwnProperty('errors')){
-							
+							name_error.applyProperties({
+								text: fields.name.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}
+						
+						var companyDelegate = fields.companyDelegate.children[0].children;
+						
+						if(companyDelegate.name.hasOwnProperty('errors')){
+							name_error.applyProperties({
+								text: companyDelegate.name.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}
+						
+						if(companyDelegate.email.hasOwnProperty('errors')){
+							email_error.applyProperties({
+								text: companyDelegate.email.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}
+						
+						
+						if(companyDelegate.password.children.first.hasOwnProperty('errors')){
+							password_error.applyProperties({
+								text: companyDelegate.password.children.first.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
+						}
+						if(companyDelegate.password.children.second.hasOwnProperty('errors')){
+							confirmPassword_error.applyProperties({
+								text: companyDelegate.password.children.second.errors[0],
+								height: Ti.UI.SIZE,
+								visible: true
+							});
 						}
 							
 					}
 					
 				}
+			
 			};
 			
 			SM.ServiceManager(param);

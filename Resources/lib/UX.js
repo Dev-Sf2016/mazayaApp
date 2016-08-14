@@ -254,8 +254,8 @@ exports.DatePicker = function(parameters) {
     
     var picker = Titanium.UI.createPicker({
        type:Titanium.UI.PICKER_TYPE_DATE,
-       minDate:new Date(1960,0,1),
-       maxDate:new Date(),
+       minDate: parameters.minDate || new Date(1960,0,1),
+       maxDate: parameters.maxDate || new Date(),
        value:parameters.date,
     });
     var isWindowOpen = false;
@@ -454,6 +454,9 @@ exports.File = function(params){
 	
 	var button = Ti.UI.createButton({width: 120, height: 30, title: params.title,backgroundColor:'#6895B2',color:'#fff'});
 	var thumb = Ti.UI.createImageView({width:150, height:150, backgroundColor:'#eee'});
+	if(params.imageUrl !== undefined){
+		thumb.image = params.imageUrl;
+	}
 	this._thumb = thumb;
 	
 	this._field = Ti.UI.createView(params);
@@ -471,6 +474,7 @@ exports.File = function(params){
 			success : function(event) {
 				_this._field.FileContents = event.media;
 				_this._thumb.image = event.media;
+				
 			},
 			cancel : function(event) {
 				//imageToSend = "null";

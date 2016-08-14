@@ -49,7 +49,8 @@ exports.generate = function(){
     });     
     return guid;
 };
-exports.getXWSEE = function(){
+exports.getXWSEE = function(area){
+	area = area || 'anonymous';
 	var user = exports.getUserInfo();
 	var d = new Date();
 	var currentDate = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " +
@@ -62,13 +63,31 @@ exports.getXWSEE = function(){
 	Config.trace(currentDate);
 	Config.trace(passwordDigest);
 	
-	var digest = 'UsernameToken Username="' + user.userName + '", PasswordDigest="'+ passwordDigest +'", Nonce="'+nonce +'", Created="'+ currentDate + '"';
+	var digest = 'UsernameToken Username="' + user.userName + '", area="' + area + '", PasswordDigest="'+ passwordDigest +'", Nonce="'+nonce +'", Created="'+ currentDate + '"';
 	
 	
 	return digest;
 
 };
+exports.getAnonymousXWSEE = function(){
+	
+	var d = new Date();
+	var currentDate = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " +
+		 d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds();
+	
+	var nonce = Ti.Utils.md5HexDigest( exports.generate());
+	
+	var passwordDigest = Ti.Utils.base64encode(Ti.Utils.sha1(Ti.Utils.base64encode(nonce) + currentDate ));
 
+	Config.trace(currentDate);
+	Config.trace(passwordDigest);
+	
+	var digest = 'UsernameToken Username="anonumous@anonymous.com", area="anonymous", PasswordDigest="'+ passwordDigest +'", Nonce="'+nonce +'", Created="'+ currentDate + '"';
+	
+	
+	return digest;
+
+};
 	
 
 exports.setSyncTime = function(){
@@ -128,7 +147,16 @@ exports.IOSWindowTitle = function(title){
 		}
 	};
 };
-
+exports.CloseNaveButton = function(){
+	return UX.Label({
+		text: ICONS.getIcon('back'),
+		color:'#fff',
+		font:{
+			fontFamily: 'realestate',
+			fontSize: '24sp'
+		}
+	});
+};
 exports.isValid = function(fields){
 		var _valid = true;
 		for(var i=0; i< fields.length; i++){
@@ -156,4 +184,13 @@ exports.isValid = function(fields){
 		
 		return _valid;
 		
+};
+exports.getDateForPicker = function(dateString){
+	var tmp = dateString.split('-');
+    var date = new Date();
+    date.setFullYear(tmp[0]);
+    date.setMonth(tmp[1]-1);
+    date.setDate(tmp[2]);
+    
+    return;
 };

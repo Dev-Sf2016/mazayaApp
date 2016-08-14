@@ -3,7 +3,8 @@
 //GLOBAL Variable
 //if(Ti.Platform.osname === 'android')		
 	//var UTILITY = require('salem.khan.utility');
-	
+
+var AppConstants = require('lib/AppConstants');
 var Config = require("config");
 var DB = require("lib/Database").Database;
 var ICONS = require("lib/ICONS").ICONS;
@@ -24,17 +25,21 @@ var LoginWindow = require(Config.uidir + "LoginWindow");
 var SignupWindow = require(Config.uidir + "SignupWindow");
 var LeftWindow = require(Config.uidir + "LeftWindow");
 var StoresWindow = require(Config.uidir + "StoresWindow");
-var DiscountWindow = require(Config.uidir + "DiscountWindow");
+var DiscountWindow = require(Config.uidir + "StoreDiscountWindow");
 var AccountWindow = require(Config.uidir + 'AccountWindow');
 
 
 I18N.setLanguage("en", Ti.UI.TEXT_ALIGNMENT_RIGHT);
 
 var leftNavigationButton = UX.Label({
-	text: "Menu",
+	text: ICONS.getIcon("menu-list"),
 	width:Ti.UI.SIZE,
 	height:Ti.UI.SIZE,
 	color:'#fff',
+	font:{
+		fontFamily: 'realestate',
+		fontSize: '24sp'
+	}
 	
 });
 
@@ -61,6 +66,16 @@ leftNavigationButton.addEventListener('click', function(e){
 	drawer.toggleLeftWindow();
 });
 
+function changeLanguage(){
+	var lang = (I18N.getLanguage() == 'ar'? 'en': 'ar');
+	var direction = (I18N.getLanguage() == 'ar'? 'ltr': 'rtl');
+	I18N.setLanguage( lang, direction);
+	leftWindow.reload();
+	hWindow.reload();
+	if(drawer.getCenterWindow() != homeWindow)
+		drawer.setCenterWindow(homeWindow);
+		
+};
 leftWindow.addEventListener('Menu:Click', function(e){
 	switch(e.rowData.name){
 			
@@ -95,6 +110,9 @@ leftWindow.addEventListener('Menu:Click', function(e){
 			});
 			drawer.setCenterWindow(createNaveWindow(signupWindow) );
 			break;
+		case 'CHANGE_LANGUAGE':
+			changeLanguage();
+			break;
 
 	}
 	
@@ -104,10 +122,17 @@ leftWindow.addEventListener('Menu:Click', function(e){
 leftWindow.addEventListener('Menu:Company:Click', function(e){
 	var _name = e.rowData.name;
 	if(_name == 'welcome') return;
+	if(_name == 'CHANGE_PASSWORD'){
+		changeLanguage();
+		drawer.toggleLeftWindow();
+		return;
+	}
 	if(_name == 'logout'){
 		Functions.logout();
+		if(drawer.getCenterWindow() != homeWindow)
+			drawer.setCenterWindow(homeWindow);
 		leftWindow.switchMenu('Menu');
-		drawer.setCenterWindow(homeWindow);
+		
 		drawer.toggleLeftWindow();
 		return;
 	};
@@ -122,10 +147,16 @@ leftWindow.addEventListener('Menu:Company:Click', function(e){
 leftWindow.addEventListener('Menu:Customer:Click', function(e){
 	var _name = e.rowData.name;
 	if(_name == 'welcome') return;
+	if(_name == 'CHANGE_PASSWORD'){
+		changeLanguage();
+		drawer.toggleLeftWindow();
+		return;
+	}
 	if(_name == 'logout'){
 		Functions.logout();
 		leftWindow.switchMenu('Menu');
-		drawer.setCenterWindow(homeWindow);
+		if(drawer.getCenterWindow() != homeWindow)
+			drawer.setCenterWindow(homeWindow);
 		drawer.toggleLeftWindow();
 		return;
 	};
@@ -163,3 +194,13 @@ function loginSuccess(){
 }
 
 drawer.open();
+
+Ti.addEventListener('credentialExpired', function(){
+	
+		Functions.logout();
+		leftWindow.switchMenu('Menu');
+		if(drawer.getCenterWindow() != homeWindow)
+			drawer.setCenterWindow(homeWindow);
+		drawer.toggleLeftWindow();
+		
+});

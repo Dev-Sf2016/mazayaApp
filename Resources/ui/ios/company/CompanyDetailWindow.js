@@ -72,7 +72,7 @@ function CompanyDetailWindow(){
 	
 	options.url = '/api/company/6.json';
 	options.locale = I18N.locale;
-	options.wsse = Functions.getXWSEE();
+	options.wsse = Functions.getXWSEE(AppConstants.COMPANY);
 	options.postData = {};
 	options.type = 'GET';
 	options.loaderMessage = I18N.text('Loadding', 'Loading...');
